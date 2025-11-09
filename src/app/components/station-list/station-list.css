@@ -1,0 +1,14 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.station-card {
+  width: 300px;
+}
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr auto;
+  gap: 12px;
+}
+.form .full { grid-column: span 2; }

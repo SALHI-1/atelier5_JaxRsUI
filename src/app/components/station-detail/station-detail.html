@@ -1,0 +1,83 @@
+<ng-container *ngIf="station$ | async as station; else loading">
+  <div class="header">
+    <a mat-button color="primary" routerLink="/stations">
+      <mat-icon>arrow_back</mat-icon>
+      Retour
+    </a>
+    <h1>{{ station.nom }}</h1>
+    <div class="sub">{{ station.ville }} • {{ station.adresse }}</div>
+  </div>
+
+  <div class="grid">
+    <mat-card class="card full">
+      <mat-card-header>
+        <mat-card-title>Historique des prix</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="prices$ | async as prices; else loadingPrices">
+          <table mat-table [dataSource]="prices" class="mat-elevation-z1">
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let row">{{ row.date }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="carburant">
+              <th mat-header-cell *matHeaderCellDef>Carburant</th>
+              <td mat-cell *matCellDef="let row">{{ row.carburant?.nom }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="prix">
+              <th mat-header-cell *matHeaderCellDef>Prix</th>
+              <td mat-cell *matCellDef="let row">{{ row.prix | number:'1.2-2' }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <div *ngIf="prices.length === 0" class="empty">Aucun prix enregistré pour cette station.</div>
+        </div>
+        <ng-template #loadingPrices>
+          <mat-spinner diameter="32"></mat-spinner>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Ajouter un prix</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="addPriceForm" (ngSubmit)="submitAddPrice()" class="form">
+          <mat-form-field appearance="outline">
+            <mat-label>Carburant</mat-label>
+            <mat-select formControlName="carburantId" required>
+              <mat-option *ngFor="let c of (carburants$ | async)" [value]="c.id">{{ c.nom }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Prix</mat-label>
+            <input matInput type="number" step="0.01" formControlName="prix" required>
+          </mat-form-field>
+
+          <button mat-flat-button color="primary" type="submit" [disabled]="loadingAdd()">
+            <mat-icon>add</mat-icon>
+            Ajouter
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
+

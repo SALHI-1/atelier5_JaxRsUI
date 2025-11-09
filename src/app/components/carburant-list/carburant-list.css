@@ -1,0 +1,7 @@
+.header { display: flex; align-items: center; gap: 12px; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+.card.full { grid-column: 1; }
+.form { display: grid; gap: 12px; grid-template-columns: 1fr 1fr auto; }
+@media (max-width: 900px) { .form { grid-template-columns: 1fr; } }
+.empty { color: #888; padding: 12px 0; }
+
