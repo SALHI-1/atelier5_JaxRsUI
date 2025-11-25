@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // Smiyat l-image (beddel 'mon-user' b username dyalek f dockerhub)
+        // Smiyat l-image 
         DOCKER_IMAGE = 'saaymo/frontend-service'
         // Tag dynamic (b numéro d build) bach t-eviter caching problems
         DOCKER_TAG = "${BUILD_NUMBER}"
@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Jab l-code mn GitHub/GitLab
+                // Jab l-code mn GitHub
                 checkout scm
             }
         }
@@ -48,12 +48,12 @@ pipeline {
                     echo '☸️ Deploying to Kubernetes...'
                     // Hna kayn 2 toro9:
                     // 1. Update YAML file (GitOps - Recommandé)
-                    // 2. Commande kubectl (Direct - Sahel l-bdya)
+                    // 2. Commande kubectl (Direct - Sahel )
                     
                     // Exemple b kubectl direct:
                     withKubeConfig([credentialsId: 'CRED-KUBE']) {
                         // Khassek tkon 3ndek fichier deployment.yaml f repo
-                        // Kan-remplaciw l-image placeholder b l-image jdida
+                        // Kanremplaciw limage placeholder b limage jdida
                         sh "sed -i 's|IMAGE_PLACEHOLDER|${DOCKER_IMAGE}:${DOCKER_TAG}|g' k8s/deployment.yaml"
                         sh "kubectl apply -f k8s/deployment.yaml"
                     }
@@ -64,7 +64,7 @@ pipeline {
     
     post {
         always {
-            // Nqqi l-docker images bach may3mrch disque
+            // Nqqi docker images bach may3mrch disque
             sh "docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true"
             sh "docker rmi ${DOCKER_IMAGE}:latest || true"
         }
